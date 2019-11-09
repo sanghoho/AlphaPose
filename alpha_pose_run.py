@@ -26,17 +26,19 @@ class PoseEstimator:
         torch.multiprocessing.set_start_method('spawn', force=True)
         self.inputpath = input_path
         self.outputpath = output_path
+        self.processing_option = is_single
 
         if not os.path.exists(self.outputpath):
             os.mkdir(self.outputpath)
         
-        if not is_single:
+        if not self.processing_option:
             torch.multiprocessing.set_start_method('forkserver', force=True)
             torch.multiprocessing.set_sharing_strategy('file_system')
         else:
             torch.multiprocessing.set_start_method('spawn', force=True)
 
         torch.cuda.empty_cache()
+
 
     def run(self):
 

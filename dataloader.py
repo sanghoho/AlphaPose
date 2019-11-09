@@ -5,14 +5,15 @@ import torch.utils.data as data
 import torchvision.transforms as transforms
 from PIL import Image, ImageDraw
 from SPPE.src.utils.img import load_image, cropBox, im_to_torch
+from SPPE.src.utils.eval import getPrediction, getMultiPeakPrediction
 from opt import opt
 from yolo.preprocess import prep_image, prep_frame, inp_to_image
-from pPose_nms import pose_nms, write_json
-from matching import candidate_reselect as matching
-from SPPE.src.utils.eval import getPrediction, getMultiPeakPrediction
 from yolo.util import write_results, dynamic_write_results
 from yolo.darknet import Darknet
+from pPose_nms import pose_nms, write_json
+from matching import candidate_reselect as matching
 from tqdm import tqdm
+
 import cv2
 import json
 import numpy as np

@@ -7,6 +7,7 @@ from torch.autograd import Variable
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+import urllib.request as urllib
 try:
     from util import count_parameters as count
     from util import convert2cpu as cpu
@@ -38,12 +39,24 @@ def prep_image(img, inp_dim):
     Returns a Variable
     """
 
-    orig_im = cv2.imread(img)
-    dim = orig_im.shape[1], orig_im.shape[0]
-    img = (letterbox_image(orig_im, (inp_dim, inp_dim)))
-    img_ = img[:, :, ::-1].transpose((2, 0, 1)).copy()
-    img_ = torch.from_numpy(img_).float().div(255.0).unsqueeze(0)
-    return img_, orig_im, dim
+    # orig_im = cv2.imread(img)
+    # dim = orig_im.shape[1], orig_im.shape[0]
+    # img = (letterbox_image(orig_im, (inp_dim, inp_dim)))
+    # img_ = img[:, :, ::-1].transpose((2, 0, 1)).copy()
+    # img_ = torch.from_numpy(img_).float().div(255.0).unsqueeze(0)
+    # return img_, orig_im, dim
+
+    headers = {'User-Agent': 'Mozilla/5.0', 'referer' : 'http://naver.com'}
+    req = urllib.Request(img, headers=headers)
+
+    with urllib.urlopen(req) as file:
+        resp = np.asarray(bytearray(file.read()), dtype="uint8")
+        orig_im = cv2.imdecode(resp, cv2.IMREAD_COLOR)
+        dim = orig_im.shape[1], orig_im.shape[0]
+        img = (letterbox_image(orig_im, (inp_dim, inp_dim)))
+        img_ = img[:, :, ::-1].transpose((2, 0, 1)).copy()
+        img_ = torch.from_numpy(img_).float().div(255.0).unsqueeze(0)
+        return img_, orig_im, dim
 
 
 def prep_frame(img, inp_dim):
