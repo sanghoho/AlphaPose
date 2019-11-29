@@ -4,9 +4,9 @@ import torch.utils.data
 import torch.utils.data.distributed
 import torch.nn.functional as F
 import numpy as np
-from SPPE.src.utils.img import flip, shuffleLR
-from SPPE.src.utils.eval import getPrediction
-from SPPE.src.models.FastPose import createModel
+from ..src.utils.img import flip, shuffleLR
+from ..src.utils.eval import getPrediction
+from ..src.models.FastPose import createModel
 
 import visdom
 import time

@@ -7,12 +7,12 @@ import torch.nn as nn
 import torch.utils.data
 import numpy as np
 
-from dataloader import ImageLoader, DetectionLoader, DetectionProcessor, DataWriter, Mscoco
-from fn import getTime
-from pPose_nms import pose_nms, write_json
+from ..utils.dataloader import ImageLoader, DetectionLoader, DetectionProcessor, DataWriter, Mscoco
+from ..utils.fn import getTime
+from ..utils.pPose_nms import pose_nms, write_json
 
-from yolo.util import write_results, dynamic_write_results
-from SPPE.src.main_fast_inference import *
+from ..yolo.util import write_results, dynamic_write_results
+from ..SPPE.src.main_fast_inference import *
 
 import os
 import glob
