@@ -39,9 +39,7 @@ class PoseEstimator:
 
         torch.cuda.empty_cache()
 
-
     def run(self):
-
         # Load input images
         data_loader = ImageLoader(self.inputpath, batchSize=1, format='yolo').start()
 
