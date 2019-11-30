@@ -1,5 +1,6 @@
 import os
 import torch
+import pkg_resources
 from torch.autograd import Variable
 import torch.utils.data as data
 import torchvision.transforms as transforms
@@ -271,16 +272,23 @@ class VideoLoader:
 
 
 class DetectionLoader:
-    def __init__(self, dataloder, batchSize=1, queueSize=1024):
+    def __init__(self, dataloder, cuda, batchSize=1, queueSize=1024):
         # initialize the file video stream along with the boolean
         # used to indicate if the thread should be stopped or not
-        self.det_model = Darknet("yolo/cfg/yolov3-spp.cfg")
-        self.det_model.load_weights('models/yolo/yolov3-spp.weights')
+        root = __name__.split(".")[0]
+
+        yolo_cfg = pkg_resources.resource_filename(root, "yolo/cfg/yolov3-spp.cfg")
+        yolo_weight = pkg_resources.resource_filename(root, "models/yolo/yolov3-spp.weights")
+        print("-----------------------")
+        self.cuda = cuda
+        self.device = torch.device("cuda" if self.cuda else "cpu")
+        self.det_model = Darknet(yolo_cfg)
+        self.det_model.load_weights(yolo_weight)
         self.det_model.net_info['height'] = opt.inp_dim
         self.det_inp_dim = int(self.det_model.net_info['height'])
         assert self.det_inp_dim % 32 == 0
         assert self.det_inp_dim > 32
-        self.det_model.cuda()
+        self.det_model.to(self.device)
         self.det_model.eval()
 
         self.stopped = False
@@ -320,8 +328,8 @@ class DetectionLoader:
 
             with torch.no_grad():
                 # Human Detection
-                img = img.cuda()
-                prediction = self.det_model(img, CUDA=True)
+                img = img.to(self.device)
+                prediction = self.det_model(img, CUDA=self.cuda)
                 # NMS process
                 dets = dynamic_write_results(prediction, opt.confidence,
                                     opt.num_classes, nms=True, nms_conf=opt.nms_thesh)
@@ -427,16 +435,23 @@ class DetectionProcessor:
 
 
 class VideoDetectionLoader:
-    def __init__(self, path, batchSize=4, queueSize=256):
+    def __init__(self, path, cuda, batchSize=4, queueSize=256):
         # initialize the file video stream along with the boolean
         # used to indicate if the thread should be stopped or not
-        self.det_model = Darknet("yolo/cfg/yolov3-spp.cfg")
-        self.det_model.load_weights('models/yolo/yolov3-spp.weights')
+        root = __name__.split(".")[0]
+
+        yolo_cfg = pkg_resources.resource_filename(root, "yolo/cfg/yolov3-spp.cfg")
+        yolo_weight = pkg_resources.resource_filename(root, "models/yolo/yolov3-spp.weights")
+        print("-----------------------")
+        self.cuda = cuda
+        self.device = torch.device("cuda" if self.cuda else "cpu")
+        self.det_model = Darknet(yolo_cfg)
+        self.det_model.load_weights(yolo_weight)
         self.det_model.net_info['height'] = opt.inp_dim
         self.det_inp_dim = int(self.det_model.net_info['height'])
         assert self.det_inp_dim % 32 == 0
         assert self.det_inp_dim > 32
-        self.det_model.cuda()
+        self.det_model.to(self.device)
         self.det_model.eval()
 
         self.stream = cv2.VideoCapture(path)
@@ -494,11 +509,11 @@ class VideoDetectionLoader:
                 ht = inp[0].size(1)
                 wd = inp[0].size(2)
                 # Human Detection
-                img = Variable(torch.cat(img)).cuda()
+                img = Variable(torch.cat(img)).to(self.device)
                 im_dim_list = torch.FloatTensor(im_dim_list).repeat(1,2)
-                im_dim_list = im_dim_list.cuda()
+                im_dim_list = im_dim_list.to(self.device)
 
-                prediction = self.det_model(img, CUDA=True)
+                prediction = self.det_model(img, CUDA=self.cuda)
                 # NMS process
                 dets = dynamic_write_results(prediction, opt.confidence,
                                     opt.num_classes, nms=True, nms_conf=opt.nms_thesh)
