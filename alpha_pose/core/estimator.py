@@ -146,6 +146,6 @@ def estimate(param):
     writer.stop()
 
     final_result = writer.results()
-    write_json(final_result, param.output_path)
+    return write_json(final_result, param.output_path, "cmu")
 
     

@@ -279,12 +279,11 @@ def PCK_match(pick_pred, all_preds, ref_dist):
     return num_match_keypoints
 
 
-def write_json(all_results, outputpath, for_eval=False):
+def write_json(all_results, outputpath, form, for_eval=False):
     '''
     all_result: result dict of predictions
     outputpath: output directory
     '''
-    form = opt.format
     json_results = []
     json_results_cmu = {}
     for im_res in all_results:
@@ -349,6 +348,7 @@ def write_json(all_results, outputpath, for_eval=False):
             for name in json_results_cmu.keys():
                 with open(os.path.join(outputpath,'sep-json',name.split('.')[0]+'.json'),'w') as json_file:
                     json_file.write(json.dumps(json_results_cmu[name]))
+        return json_results_cmu
     elif form == 'open': # the form of OpenPose
         with open(os.path.join(outputpath,'alphapose-results.json'), 'w') as json_file:
             json_file.write(json.dumps(json_results_cmu))
@@ -357,7 +357,9 @@ def write_json(all_results, outputpath, for_eval=False):
             for name in json_results_cmu.keys():
                 with open(os.path.join(outputpath,'sep-json',name.split('.')[0]+'.json'),'w') as json_file:
                     json_file.write(json.dumps(json_results_cmu[name]))
+        return json_results_cmu
     else:
         with open(os.path.join(outputpath,'alphapose-results.json'), 'w') as json_file:
             json_file.write(json.dumps(json_results))
+        return json_results
 
