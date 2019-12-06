@@ -18,6 +18,10 @@ parser.add_argument('--snapshot', default=1, type=int,
 "----------------------------- AlphaPose options -----------------------------"
 parser.add_argument('--addDPG', default=False, type=bool,
                     help='Train with data augmentation')
+parser.add_argument('--sp', default=True, action='store_true',
+                    help='Use single process for pytorch')
+parser.add_argument('--profile', default=False, action='store_true',
+                    help='add speed profiling at screen output')
 
 "----------------------------- Model options -----------------------------"
 parser.add_argument('--netType', default='hgPRM', type=str,
@@ -28,10 +32,16 @@ parser.add_argument('--Continue', default=False, type=bool,
                     help='Pick up where an experiment left off')
 parser.add_argument('--nFeats', default=256, type=int,
                     help='Number of features in the hourglass')
-parser.add_argument('--nClasses', default=17, type=int,
+parser.add_argument('--nClasses', default=33, type=int,
                     help='Number of output channel')
-parser.add_argument('--nStack', default=8, type=int,
+parser.add_argument('--nStack', default=4, type=int,
                     help='Number of hourglasses to stack')
+
+"----------------------------- Hyperparameter options -----------------------------"
+parser.add_argument('--fast_inference', default=True, type=bool,
+                    help='Fast inference')
+parser.add_argument('--use_pyranet', default=True, type=bool,
+                    help='use pyranet')
 
 "----------------------------- Hyperparameter options -----------------------------"
 parser.add_argument('--LR', default=2.5e-4, type=float,
@@ -61,14 +71,15 @@ parser.add_argument('--valIters', default=0, type=int,
                     help='Total valid iters')
 parser.add_argument('--init', default=None, type=str,
                     help='Initialization')
+
 "----------------------------- Data options -----------------------------"
-parser.add_argument('--inputResH', default=384, type=int,
+parser.add_argument('--inputResH', default=320, type=int,
                     help='Input image height')
-parser.add_argument('--inputResW', default=320, type=int,
+parser.add_argument('--inputResW', default=256, type=int,
                     help='Input image width')
-parser.add_argument('--outputResH', default=96, type=int,
+parser.add_argument('--outputResH', default=80, type=int,
                     help='Output heatmap height')
-parser.add_argument('--outputResW', default=80, type=int,
+parser.add_argument('--outputResW', default=64, type=int,
                     help='Output heatmap width')
 parser.add_argument('--scale', default=0.25, type=float,
                     help='Degree of scale augmentation')
@@ -92,7 +103,6 @@ parser.add_argument('--backend', dest='backend', type=str, default='gloo',
                     help='backend for distributed training')
 parser.add_argument('--port', dest='port',
                     help='port of server')
-
 
 opt = parser.parse_args()
 if opt.Continue:

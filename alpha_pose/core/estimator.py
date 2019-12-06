@@ -123,7 +123,7 @@ def estimate(param):
             ckpt_time, pose_time = getTime(ckpt_time)
             runtime_profile['pt'].append(pose_time)
             hm = hm.cpu()
-            self.writer.save(boxes, scores, hm, pt1, pt2, orig_img, im_name.split('/')[-1])
+            writer.save(boxes, scores, hm, pt1, pt2, orig_img, im_name.split('/')[-1])
 
             ckpt_time, post_time = getTime(ckpt_time)
             runtime_profile['pn'].append(post_time)
