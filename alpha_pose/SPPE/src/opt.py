@@ -3,46 +3,48 @@ import torch
 
 # 
 
-expID= 'default'
-dataset =  'coco'
-nThreads =  30
-debug =  False
-snapshot =  1
-addDPG =  False
-sp =  True
-profile =  False
-netType =  'hgPRM'
-loadModel =  None
-Continue =  False
-nFeats =  256
-nClasses =  33
-nStack =  4
-fast_inference =  True
-use_pyranet =  True
-LR =  2.5e-4
-momentum =  0
-weightDecay =  0
-crit =  MSE
-optMethod =  'rmsprop'
-nEpochs =  50
-epoch =  0
-trainBatch =  40
-validBatch =  20
-trainIters =  0
-valIters =  0
-init =  None
-inputResH =  320
-inputResW =  256
-outputResH =  80
-outputResW =  64
-scale =  0.25
-rotate =  30
-hmGauss =  1
-baseWidth =  9
-cardinality =  5
-nResidual =  1
-dist = 1 
-backend =  'gloo'
+class opt:
+
+    expID= 'default'
+    dataset =  'coco'
+    nThreads =  30
+    debug =  False
+    snapshot =  1
+    addDPG =  False
+    sp =  True
+    profile =  False
+    netType =  'hgPRM'
+    loadModel =  None
+    Continue =  False
+    nFeats =  256
+    nClasses =  33
+    nStack =  4
+    fast_inference =  True
+    use_pyranet =  True
+    LR =  2.5e-4
+    momentum =  0
+    weightDecay =  0
+    crit =  'MSE'
+    optMethod =  'rmsprop'
+    nEpochs =  50
+    epoch =  0
+    trainBatch =  40
+    validBatch =  20
+    trainIters =  0
+    valIters =  0
+    init =  None
+    inputResH =  320
+    inputResW =  256
+    outputResH =  80
+    outputResW =  64
+    scale =  0.25
+    rotate =  30
+    hmGauss =  1
+    baseWidth =  9
+    cardinality =  5
+    nResidual =  1
+    dist = 1 
+    backend =  'gloo'
 
 """
 parser = argparse.ArgumentParser(description='PyTorch AlphaPose Training')
